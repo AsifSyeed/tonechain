@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and package (universal Release)
+        run: ./scripts/package.sh
+
+      - name: Validate Audio Unit
+        run: |
+          killall -9 AudioComponentRegistrar || true
+          auval -v aufx Pdbd SyAu
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tonechain-macOS
+          path: dist/*.zip
