@@ -13,7 +13,12 @@ public:
     static constexpr int width = 132;
     static constexpr int height = 196;
 
-    PedalComponent (int index, const PedalboardProcessor::Pedal&, bool isSelected, bool isLearningMidi);
+    PedalComponent (int index, const PedalboardProcessor::Pedal&, juce::Colour enclosure,
+                    bool isSelected, bool isLearningMidi);
+
+    // "ValhallaSupermassive" -> "Valhalla Supermassive", so long one-word
+    // product names can wrap on the name plate instead of being cut off.
+    static juce::String displayName (const juce::String& pluginName);
 
     int getIndex() const noexcept { return index; }
 
@@ -51,6 +56,7 @@ private:
 
     const int index;
     const PedalboardProcessor::Pedal pedal;
+    const juce::Colour enclosureColour;
     const bool selected;
     const bool learningMidi;
     bool hovering = false;

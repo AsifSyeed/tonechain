@@ -3,8 +3,9 @@
 
 namespace theme = pedalboard::theme;
 
-PedalComponent::PedalComponent (int indexIn, const PedalboardProcessor::Pedal& pedalIn, bool isSelected, bool isLearningMidi)
-    : index (indexIn), pedal (pedalIn), selected (isSelected), learningMidi (isLearningMidi)
+PedalComponent::PedalComponent (int indexIn, const PedalboardProcessor::Pedal& pedalIn, juce::Colour enclosure,
+                                bool isSelected, bool isLearningMidi)
+    : index (indexIn), pedal (pedalIn), enclosureColour (enclosure), selected (isSelected), learningMidi (isLearningMidi)
 {
     setSize (width, height);
     setRepaintsOnMouseActivity (true);
@@ -16,6 +17,23 @@ PedalComponent::PedalComponent (int indexIn, const PedalboardProcessor::Pedal& p
         description << ", switched by MIDI " << pedal.midi.describe();
 
     setDescription (description);
+}
+
+juce::String PedalComponent::displayName (const juce::String& pluginName)
+{
+    juce::String result;
+    auto previous = (juce::juce_wchar) 0;
+
+    for (auto c : pluginName)
+    {
+        if (juce::CharacterFunctions::isUpperCase (c) && juce::CharacterFunctions::isLowerCase (previous))
+            result << ' ';
+
+        result << c;
+        previous = c;
+    }
+
+    return result;
 }
 
 juce::Rectangle<float> PedalComponent::getBodyArea() const
@@ -38,7 +56,7 @@ juce::Rectangle<float> PedalComponent::getRemoveArea() const
 void PedalComponent::paint (juce::Graphics& g)
 {
     const auto body = getBodyArea();
-    auto colour = theme::enclosureColourFor (pedal.description.name);
+    auto colour = enclosureColour;
 
     if (pedal.missing)
         colour = juce::Colour::fromRGB (70, 72, 78);
@@ -99,8 +117,8 @@ void PedalComponent::paint (juce::Graphics& g)
     label = label.reduced (6.0f, 6.0f);
     g.setColour (textColour);
     g.setFont (juce::FontOptions (14.5f, juce::Font::bold));
-    g.drawFittedText (pedal.description.name.toUpperCase(), label.withTrimmedBottom (18.0f).toNearestInt(),
-                      juce::Justification::centred, 3, 0.8f);
+    g.drawFittedText (displayName (pedal.description.name).toUpperCase(), label.withTrimmedBottom (18.0f).toNearestInt(),
+                      juce::Justification::centred, 3, 0.75f);
 
     g.setColour (pedal.missing ? theme::ledOn.brighter (0.4f) : textColour.withAlpha (0.65f));
     g.setFont (juce::FontOptions (10.5f, pedal.missing ? juce::Font::bold : juce::Font::plain));

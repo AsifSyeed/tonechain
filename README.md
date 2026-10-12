@@ -2,7 +2,7 @@
 
 **A pedalboard for your Audio Units.** Load any AU effect as a stompbox, chain them with virtual patch cables, stomp them on and off with a MIDI footswitch, and save the whole rig with your Logic Pro project.
 
-![Tonechain with four pedals on the board](docs/screenshot.png)
+![Tonechain with TDR Kotelnikov, TDR Nova and Valhalla Supermassive on the board](docs/screenshot.png)
 
 ## Features
 

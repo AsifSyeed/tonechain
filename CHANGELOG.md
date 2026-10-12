@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Long one-word plug-in names wrap on the pedal ("ValhallaSupermassive" shows as "Valhalla Supermassive") instead of being cut off.
+- Neighbouring pedals never share an enclosure colour.
+
 ## 0.2.0 (first public release)
 
 - Hosts Audio Unit effects as pedals in a serial chain, inside Logic Pro or any AU host, or as a standalone app.

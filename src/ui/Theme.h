@@ -23,23 +23,24 @@ inline const juce::Colour ledOn = juce::Colour::fromRGB (255, 64, 54);
 inline const juce::Colour midi = juce::Colour::fromRGB (96, 210, 255);
 inline const juce::Colour ledOff = juce::Colour::fromRGB (70, 18, 16);
 
-// Each pedal gets a stable enclosure colour derived from its plugin name.
-inline juce::Colour enclosureColourFor (const juce::String& name)
-{
-    static const juce::Colour palette[] {
-        juce::Colour::fromRGB (196, 64, 52),   // red
-        juce::Colour::fromRGB (222, 140, 40),  // orange
-        juce::Colour::fromRGB (214, 186, 52),  // yellow
-        juce::Colour::fromRGB (72, 150, 88),   // green
-        juce::Colour::fromRGB (52, 132, 176),  // blue
-        juce::Colour::fromRGB (112, 82, 168),  // purple
-        juce::Colour::fromRGB (186, 186, 190), // silver
-        juce::Colour::fromRGB (58, 60, 66),    // black
-        juce::Colour::fromRGB (206, 92, 130),  // pink
-        juce::Colour::fromRGB (64, 160, 160),  // teal
-    };
+// Pedal enclosure colours. Each plug-in gets a stable one derived from its
+// name; the board nudges it along when two neighbours would match.
+inline const juce::Colour enclosurePalette[] {
+    juce::Colour::fromRGB (196, 64, 52),   // red
+    juce::Colour::fromRGB (222, 140, 40),  // orange
+    juce::Colour::fromRGB (214, 186, 52),  // yellow
+    juce::Colour::fromRGB (72, 150, 88),   // green
+    juce::Colour::fromRGB (52, 132, 176),  // blue
+    juce::Colour::fromRGB (112, 82, 168),  // purple
+    juce::Colour::fromRGB (186, 186, 190), // silver
+    juce::Colour::fromRGB (58, 60, 66),    // black
+    juce::Colour::fromRGB (206, 92, 130),  // pink
+    juce::Colour::fromRGB (64, 160, 160),  // teal
+};
 
-    const auto hash = (size_t) (juce::uint32) name.hashCode();
-    return palette[hash % std::size (palette)];
+inline int enclosureColourIndexFor (const juce::String& name)
+{
+    return (int) ((juce::uint32) name.hashCode() % (juce::uint32) std::size (enclosurePalette));
 }
+
 } // namespace pedalboard::theme

@@ -533,11 +533,21 @@ void PedalboardEditor::rebuildBoard()
 
     const auto learnTarget = board.getMidiLearnTarget();
     std::vector<std::unique_ptr<PedalComponent>> components;
+    auto previousColour = -1;
 
     for (size_t i = 0; i < pedals.size(); ++i)
     {
         const auto nodeId = pedals[i].nodeId;
-        auto pedal = std::make_unique<PedalComponent> ((int) i, pedals[i], nodeId == selectedNode, nodeId == learnTarget);
+        // Stable colour per plug-in, nudged along so neighbours never match.
+        auto colour = theme::enclosureColourIndexFor (pedals[i].description.name);
+
+        if (colour == previousColour)
+            colour = (colour + 1) % (int) std::size (theme::enclosurePalette);
+
+        previousColour = colour;
+
+        auto pedal = std::make_unique<PedalComponent> ((int) i, pedals[i], theme::enclosurePalette[colour],
+                                                       nodeId == selectedNode, nodeId == learnTarget);
 
         pedal->onSelect = [this, nodeId] { selectPedal (nodeId); };
         pedal->onRemove = [this, nodeId] { board.removePedal (nodeId); };
